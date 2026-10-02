@@ -287,6 +287,7 @@ const ICONS = {
   hist: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18"/><path d="M6 16v-5M11 16V8M16 16v-8M21 16V5"/></svg>',
   gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2z"/></svg>',
   pill: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(-45 12 12)"/><path d="M8.5 15.5l7-7"/></svg>',
+  mark: '<svg class="app-mark" viewBox="0 0 48 48"><defs><linearGradient id="hmbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1b3a"/><stop offset=".5" stop-color="#2d1b4e"/><stop offset="1" stop-color="#0f0c29"/></linearGradient><linearGradient id="hmp1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#3b82f6"/></linearGradient><linearGradient id="hmp2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6366f1"/></linearGradient><linearGradient id="hmp3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#hmbg)"/><g transform="translate(24 15.5) rotate(-18)"><rect x="-10" y="-3.2" width="20" height="6.4" rx="3.2" fill="url(#hmp1)"/><rect x="-10" y="-3.2" width="10" height="6.4" rx="3.2" fill="#fff" opacity=".3"/></g><g transform="translate(24 24.5) rotate(12)"><rect x="-10" y="-3.2" width="20" height="6.4" rx="3.2" fill="url(#hmp2)"/><rect x="-10" y="-3.2" width="10" height="6.4" rx="3.2" fill="#fff" opacity=".28"/></g><g transform="translate(26.5 33.5) rotate(-22)"><rect x="-10" y="-3.2" width="20" height="6.4" rx="3.2" fill="url(#hmp3)"/><rect x="-10" y="-3.2" width="10" height="6.4" rx="3.2" fill="#fff" opacity=".28"/></g></svg>',
   lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
   sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>',
   moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>',
@@ -320,7 +321,7 @@ function drawOnboarding() {
   if (c === 'welcome') {
     html = `
     <div class="screen fadein"><div class="glass-deep onboard-card">
-      <div class="hero-mark">${ICONS.pill}</div>
+      <div class="hero-mark">${ICONS.mark}</div>
       <div class="hero-title">Stack</div>
       <div class="hero-sub">Your supplement tracker, sealed with encryption.<br>
       Your <b>12-word recovery code</b> is the only key —<br>not even this server can read your data.</div>
@@ -378,7 +379,7 @@ function drawOnboarding() {
   } else if (c === 'working') {
     html = `
     <div class="screen"><div class="glass-deep onboard-card">
-      <div class="hero-mark">${ICONS.pill}</div>
+      <div class="hero-mark">${ICONS.mark}</div>
       <h1>${esc(ob.workingText || 'Working…')}</h1>
       <div class="spinner"></div>
       <div class="sub">${esc(ob.workingSub || 'Deriving encryption keys. This takes a few seconds by design.')}</div>
@@ -386,7 +387,7 @@ function drawOnboarding() {
   } else if (c === 'restore') {
     html = `
     <div class="screen fadein"><div class="glass-deep onboard-card">
-      <div class="hero-mark">${ICONS.key}</div>
+      <div class="hero-mark">${ICONS.mark}</div>
       <h1>Restore vault</h1>
       <div class="sub" style="margin:8px 0 16px">Enter your 12-word recovery code to unlock your vault.</div>
       <div class="field" style="text-align:left"><label>Recovery code</label>
@@ -523,7 +524,7 @@ function renderUnlock(reason) {
   const err = reason ? `<div class="err">${esc(reason)}</div>` : '';
   root.innerHTML = `
   <div class="screen fadein"><div class="glass-deep onboard-card">
-    <div class="hero-mark">${ICONS.pill}</div>
+    <div class="hero-mark">${ICONS.mark}</div>
     <div class="hero-title">Stack</div>
     <div class="sub" style="margin-bottom:20px">Your vault is encrypted.<br>Unlock to continue.</div>
     ${err}
@@ -619,7 +620,7 @@ function renderApp() {
   root.innerHTML = `
   <header class="app-header">
     <div class="brand">
-      <div class="brand-mark">${ICONS.pill}</div>
+      <div class="brand-mark">${ICONS.mark}</div>
       <div><div class="brand-name">Stack</div><div class="brand-tag"><span id="syncdot" class="sync-dot"></span> encrypted</div></div>
     </div>
     <div style="display:flex;gap:10px">
@@ -661,18 +662,48 @@ function renderTab() {
   try { wireTab(); } catch (e) { console.error('wireTab failed for tab', tab, e); }
 }
 
-/* ---------------- TODAY ---------------- */
+/* ---------------- TODAY (dashboard) ---------------- */
+
+function streaksWidget() {
+  const rows = vault.supplements
+    .filter(s => !s.archived)
+    .map(s => ({ s, ...streaks(suppDates(s.id)) }))
+    .filter(r => r.current > 0)
+    .sort((a, b) => b.current - a.current)
+    .slice(0, 3);
+  if (!rows.length) return '<h3>Streaks</h3><div class="sub">Log supplements to start a streak.</div>';
+  return '<h3>Streaks</h3>' + rows.map(r => `
+    <div class="streak-row">
+      <span class="badge hot">${ICONS.flame} ${r.current}d</span>
+      <div class="grow"><div class="t">${esc(r.s.name)}</div><div class="s">best ${r.longest}d</div></div>
+    </div>`).join('') +
+    '<button class="link-btn" id="w-go-history" style="padding:8px 0 0">View all history →</button>';
+}
+
+function statsWidget() {
+  const active = vault.supplements.filter(s => !s.archived).length;
+  const groups = vault.groups.length;
+  const allDates = new Set();
+  for (const id in vault.logs) for (const dt of vault.logs[id]) allDates.add(dt);
+  return `<h3>At a glance</h3>
+    <div class="stat-grid">
+      <div class="hist-stat"><div class="n">${active}</div><div class="l">supplements</div></div>
+      <div class="hist-stat"><div class="n">${groups}</div><div class="l">groups</div></div>
+      <div class="hist-stat"><div class="n">${allDates.size}</div><div class="l">days logged</div></div>
+    </div>`;
+}
 
 function viewToday() {
-  const { taken, total } = dayStats(viewDate);
+  viewDate = localDate(); // home is always today — no day navigation
+  const d = viewDate;
+  const { taken, total } = dayStats(d);
   const pct = total ? Math.round((taken / total) * 100) : 0;
   const R = 34, CIRC = 2 * Math.PI * R;
-  const rel = relDay(viewDate);
   let groupsHtml = '';
   for (const g of sortedGroups()) {
-    const items = groupSupps(g.id, viewDate);
+    const items = groupSupps(g.id, d);
     if (!items.length) continue;
-    const done = items.filter(s => isTaken(s.id, viewDate)).length;
+    const done = items.filter(s => isTaken(s.id, d)).length;
     groupsHtml += `
     <div class="glass group-card">
       <div class="group-head">
@@ -680,7 +711,7 @@ function viewToday() {
         ${done < items.length ? `<button class="log-all" data-logall="${g.id}">Log all</button>` : ''}
       </div>
       ${items.map(s => `
-        <div class="supp-row ${isTaken(s.id, viewDate) ? 'taken' : ''}" data-toggle="${s.id}">
+        <div class="supp-row ${isTaken(s.id, d) ? 'taken' : ''}" data-toggle="${s.id}">
           <div class="check">${ICONS.check}</div>
           <div class="supp-info">
             <div class="supp-name">${esc(s.name)}</div>
@@ -695,27 +726,33 @@ function viewToday() {
       <div class="sub">Add supplements in the Manage tab to start tracking.</div></div>`;
   }
   return `
-  <div class="date-nav">
-    <button class="icon-btn" id="day-prev">‹</button>
-    <div class="date-title"><div class="d">${esc(fmtDate(viewDate))}</div><div class="rel">${esc(rel || ' ')}</div></div>
-    <button class="icon-btn" id="day-next">›</button>
-  </div>
-  <div class="glass progress-card">
-    <div class="ring">
-      <svg width="84" height="84"><circle cx="42" cy="42" r="${R}" stroke="rgba(127,127,160,0.25)" stroke-width="9" fill="none"/>
-      <circle cx="42" cy="42" r="${R}" stroke="url(#grad)" stroke-width="9" fill="none" stroke-linecap="round"
-        stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC * (1 - pct / 100)}" style="transition:stroke-dashoffset .6s ease"/>
-      <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
-      <div class="pct">${pct}%</div>
-    </div>
-    <div class="progress-meta">
-      <div class="big">${taken} of ${total} taken</div>
-      <div class="sub2">${total === 0 ? 'Add supplements to get started' : pct === 100 ? 'All done. Streak protected.' : 'Tap a supplement to log it'}</div>
+  <div class="dash-head">
+    <div>
+      <div class="dash-title">Today</div>
+      <div class="sub">${esc(fmtDate(d))}</div>
     </div>
   </div>
-  ${groupsHtml}
-  ${viewDate !== localDate() ? `<button class="btn btn-ghost" id="day-today" style="margin-top:4px">Back to today</button>` : ''}`;
+  <div class="dash-grid">
+    <div class="dash-main">${groupsHtml}</div>
+    <aside class="dash-side">
+      <div class="glass progress-card widget w-order-progress">
+        <div class="ring">
+          <svg width="84" height="84"><circle cx="42" cy="42" r="${R}" stroke="rgba(127,127,160,0.25)" stroke-width="9" fill="none"/>
+          <circle cx="42" cy="42" r="${R}" stroke="url(#grad)" stroke-width="9" fill="none" stroke-linecap="round"
+            stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC * (1 - pct / 100)}" style="transition:stroke-dashoffset .6s ease"/>
+          <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs></svg>
+          <div class="pct">${pct}%</div>
+        </div>
+        <div class="progress-meta">
+          <div class="big">${taken} of ${total} taken</div>
+          <div class="sub2">${total === 0 ? 'Add supplements to get started' : pct === 100 ? 'All done. Streak protected.' : 'Tap a supplement to log it'}</div>
+        </div>
+      </div>
+      <div class="glass widget w-order-later">${streaksWidget()}</div>
+      <div class="glass widget w-order-later">${statsWidget()}</div>
+    </aside>
+  </div>`;
 }
 
 /* ---------------- CALENDAR ---------------- */
@@ -876,12 +913,10 @@ function on(id, fn) {
 
 function wireTab() {
   if (tab === 'today') {
-    on('day-prev', () => { viewDate = shiftDate(viewDate, -1); renderTab(); });
-    on('day-next', () => { viewDate = shiftDate(viewDate, 1); renderTab(); });
-    on('day-today', () => { viewDate = localDate(); renderTab(); });
     document.querySelectorAll('[data-toggle]').forEach(el => {
       el.onclick = () => commit(mToggle(el.dataset.toggle, viewDate));
     });
+    on('w-go-history', () => { tab = 'history'; renderTab(); });
     document.querySelectorAll('[data-logall]').forEach(el => {
       el.onclick = e => { e.stopPropagation(); commit(mLogAll(el.dataset.logall, viewDate)); toast('Logged'); };
     });

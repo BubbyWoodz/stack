@@ -250,7 +250,19 @@ textarea.input { min-height: 88px; resize: vertical; }
 .supp-sub { font-size: 13px; color: var(--text-faint); margin-top: 2px; }
 
 .empty-day { text-align: center; padding: 40px 20px; color: var(--text-dim); }
-.empty-day .big-emoji { font-size: 44px; margin-bottom: 10px; }
+.empty-day .big-emoji { margin-bottom: 10px; display: grid; place-items: center; }
+.empty-day .big-emoji svg { width: 52px; height: 52px; color: var(--text-faint); }
+
+/* inline SVG icons that follow the theme */
+.hero-mark svg { width: 44px; height: 44px; color: #fff; }
+.icon-btn svg { width: 22px; height: 22px; }
+.warn-inline { display: inline-flex; align-items: center; gap: 6px; }
+.warn-inline svg { width: 18px; height: 18px; flex-shrink: 0; }
+.inline-ico { display: inline-flex; vertical-align: -3px; }
+.inline-ico svg { width: 15px; height: 15px; }
+.badge.hot { display: inline-flex; align-items: center; gap: 5px; }
+.badge.hot svg { width: 14px; height: 14px; }
+.check svg { width: 17px; height: 17px; }
 
 /* ---------- calendar ---------- */
 

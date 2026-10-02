@@ -462,7 +462,7 @@ input[type="time"].input { width: auto; min-height: 44px; }
 /* ---------- desktop: full-width multi-column dashboard ---------- */
 
 @media (min-width: 768px) {
-  #root { max-width: 1180px; padding: 0 32px 120px; }
+  #root { max-width: none; padding: 0 32px 120px; }
 
   .app-header { padding: 30px 8px 22px; }
   .brand-mark { width: 54px; height: 54px; border-radius: 18px; }
@@ -487,9 +487,38 @@ input[type="time"].input { width: auto; min-height: 44px; }
 
   .group-card { padding: 22px; }
   .tabbar { width: 560px; }
+
+  .hist-list {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 14px; align-items: start;
+  }
+  .hist-list .hist-card { margin-bottom: 0; }
 }
 
 @media (min-width: 1200px) {
-  #root { max-width: 1280px; }
   .dash-grid { grid-template-columns: minmax(0, 1fr) 380px; }
+}
+
+/* ---------- ultrawide: distribute across 3 columns ---------- */
+
+@media (min-width: 1700px) {
+  .dash-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(640px, 840px);
+  }
+  /* sidebar becomes its own 2-col grid: progress ring full-width on top,
+     streaks + stats side by side below */
+  .dash-side {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; align-items: start; align-content: start;
+  }
+  .dash-side .w-order-progress { grid-column: 1 / -1; }
+  .hist-list { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); }
+}
+
+@media (min-width: 1400px) {
+  .manage-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px; align-items: start;
+  }
+  .manage-grid > .tiny { grid-column: 1 / -1; }
 }

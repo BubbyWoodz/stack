@@ -48,6 +48,19 @@ function relDay(ds) {
   return '';
 }
 
+function notifPerm() {
+  try { return (typeof Notification !== 'undefined' && Notification.permission) || 'unsupported'; }
+  catch (e) { return 'unsupported'; }
+}
+function notifStatus() {
+  const p = notifPerm();
+  return p === 'granted' ? 'Enabled' : p === 'denied' ? 'Blocked in browser settings' : p === 'unsupported' ? 'Not supported in this browser' : 'Not enabled';
+}
+function notifCanAsk() {
+  const p = notifPerm();
+  return p !== 'granted' && p !== 'denied' && p !== 'unsupported';
+}
+
 let toastTimer;
 function toast(msg) {
   toastEl.textContent = msg;
@@ -274,7 +287,14 @@ const ICONS = {
   hist: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 20h18"/><path d="M6 16v-5M11 16V8M16 16v-8M21 16V5"/></svg>',
   gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2z"/></svg>',
   pill: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(-45 12 12)"/><path d="M8.5 15.5l7-7"/></svg>',
-  lock: '🔒', sun: '☀️', moon: '🌙',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="15" r="4.5"/><path d="M11.5 11.5L20 3M15.5 7.5l3 3M12.5 10.5l2.5 2.5"/></svg>',
+  warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2.5 20h19L12 3z"/><path d="M12 9.5V14"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.4 0 7.5-3 7.5-7.2 0-3.1-1.9-5.4-3.7-7.2-.4 1.2-1.1 2.3-2.1 3.1.3-2.7-.8-6.1-3.2-8.7-2.6 2.9-6 7.3-6 12.8 0 4.2 3.1 7.2 7.5 7.2z"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>',
 };
 
 /* ==================================================================
@@ -300,7 +320,7 @@ function drawOnboarding() {
   if (c === 'welcome') {
     html = `
     <div class="screen fadein"><div class="glass-deep onboard-card">
-      <div class="hero-mark">💊</div>
+      <div class="hero-mark">${ICONS.pill}</div>
       <div class="hero-title">Stack</div>
       <div class="hero-sub">Your supplement tracker, sealed with encryption.<br>
       Your <b>12-word recovery code</b> is the only key —<br>not even this server can read your data.</div>
@@ -316,7 +336,7 @@ function drawOnboarding() {
       <h1>Your recovery code</h1>
       <div class="sub" style="margin:8px 0 4px">Write these 12 words down <b>in order</b>. You'll confirm them next.</div>
       <div class="words-grid">${words.map((w, i) => `<div class="word-chip"><span class="num">${i + 1}</span>${esc(w)}</div>`).join('')}</div>
-      <div class="warning-box"><b>⚠️ No recovery exists.</b> If you lose these 12 words, your data is gone forever. Nobody — not even the developer — can get it back.</div>
+      <div class="warning-box"><b class="warn-inline">${ICONS.warn} No recovery exists.</b> If you lose these 12 words, your data is gone forever. Nobody — not even the developer — can get it back.</div>
       <label class="checkline"><input type="checkbox" id="ob-written"><span>I've written down all 12 words in order</span></label>
       <button class="btn" id="ob-words-next" disabled>Continue</button>
     </div></div>`;
@@ -358,7 +378,7 @@ function drawOnboarding() {
   } else if (c === 'working') {
     html = `
     <div class="screen"><div class="glass-deep onboard-card">
-      <div class="hero-mark">💊</div>
+      <div class="hero-mark">${ICONS.pill}</div>
       <h1>${esc(ob.workingText || 'Working…')}</h1>
       <div class="spinner"></div>
       <div class="sub">${esc(ob.workingSub || 'Deriving encryption keys. This takes a few seconds by design.')}</div>
@@ -366,7 +386,7 @@ function drawOnboarding() {
   } else if (c === 'restore') {
     html = `
     <div class="screen fadein"><div class="glass-deep onboard-card">
-      <div class="hero-mark">🔑</div>
+      <div class="hero-mark">${ICONS.key}</div>
       <h1>Restore vault</h1>
       <div class="sub" style="margin:8px 0 16px">Enter your 12-word recovery code to unlock your vault.</div>
       <div class="field" style="text-align:left"><label>Recovery code</label>
@@ -503,7 +523,7 @@ function renderUnlock(reason) {
   const err = reason ? `<div class="err">${esc(reason)}</div>` : '';
   root.innerHTML = `
   <div class="screen fadein"><div class="glass-deep onboard-card">
-    <div class="hero-mark">💊</div>
+    <div class="hero-mark">${ICONS.pill}</div>
     <div class="hero-title">Stack</div>
     <div class="sub" style="margin-bottom:20px">Your vault is encrypted.<br>Unlock to continue.</div>
     ${err}
@@ -627,11 +647,18 @@ function renderApp() {
 function renderTab() {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   const v = $('#view');
-  if (tab === 'today') v.innerHTML = viewToday();
-  else if (tab === 'calendar') v.innerHTML = viewCalendar();
-  else if (tab === 'history') v.innerHTML = viewHistory();
-  else v.innerHTML = viewManage();
-  wireTab();
+  try {
+    if (tab === 'today') v.innerHTML = viewToday();
+    else if (tab === 'calendar') v.innerHTML = viewCalendar();
+    else if (tab === 'history') v.innerHTML = viewHistory();
+    else v.innerHTML = viewManage();
+  } catch (e) {
+    console.error('renderTab failed for tab', tab, e);
+    v.innerHTML = `<div class="glass empty-day"><div class="big-emoji">${ICONS.warn}</div>
+      <div style="font-weight:800;font-size:17px;margin-bottom:6px">Something went wrong</div>
+      <div class="sub">Please reload the page. If it persists, lock and unlock your vault.</div></div>`;
+  }
+  try { wireTab(); } catch (e) { console.error('wireTab failed for tab', tab, e); }
 }
 
 /* ---------------- TODAY ---------------- */
@@ -654,7 +681,7 @@ function viewToday() {
       </div>
       ${items.map(s => `
         <div class="supp-row ${isTaken(s.id, viewDate) ? 'taken' : ''}" data-toggle="${s.id}">
-          <div class="check">✓</div>
+          <div class="check">${ICONS.check}</div>
           <div class="supp-info">
             <div class="supp-name">${esc(s.name)}</div>
             ${s.dose || s.brand ? `<div class="supp-sub">${esc([s.dose, s.brand].filter(Boolean).join(' · '))}</div>` : ''}
@@ -663,7 +690,7 @@ function viewToday() {
     </div>`;
   }
   if (!groupsHtml) {
-    groupsHtml = `<div class="glass empty-day"><div class="big-emoji">💊</div>
+    groupsHtml = `<div class="glass empty-day"><div class="big-emoji">${ICONS.pill}</div>
       <div style="font-weight:800;font-size:17px;margin-bottom:6px">Nothing scheduled</div>
       <div class="sub">Add supplements in the Manage tab to start tracking.</div></div>`;
   }
@@ -684,7 +711,7 @@ function viewToday() {
     </div>
     <div class="progress-meta">
       <div class="big">${taken} of ${total} taken</div>
-      <div class="sub2">${total === 0 ? 'Add supplements to get started' : pct === 100 ? 'All done. Streak protected. 🎉' : 'Tap a supplement to log it'}</div>
+      <div class="sub2">${total === 0 ? 'Add supplements to get started' : pct === 100 ? 'All done. Streak protected.' : 'Tap a supplement to log it'}</div>
     </div>
   </div>
   ${groupsHtml}
@@ -752,7 +779,7 @@ function viewCalendar() {
 function viewHistory() {
   const supps = [...vault.supplements].sort((a, b) => (b.archived ? 0 : 1) - (a.archived ? 0 : 1) || a.name.localeCompare(b.name));
   if (!supps.length) {
-    return `<div class="glass empty-day"><div class="big-emoji">📊</div>
+    return `<div class="glass empty-day"><div class="big-emoji">${ICONS.hist}</div>
       <div style="font-weight:800;font-size:17px;margin-bottom:6px">No history yet</div>
       <div class="sub">Log some supplements and your streaks will show up here.</div></div>`;
   }
@@ -767,7 +794,7 @@ function viewHistory() {
         <div class="hist-sub">${esc([s.dose, s.brand, g ? g.name : ''].filter(Boolean).join(' · '))}</div></div>
         ${s.archived
           ? '<span class="badge archived">archived</span>'
-          : current >= 7 ? '<span class="badge hot">🔥 on fire</span>' : ''}
+          : current >= 7 ? '<span class="badge hot">${ICONS.flame} on fire</span>' : ''}
       </div>
       <div class="hist-stats">
         <div class="hist-stat"><div class="n">${dates.length}</div><div class="l">days taken</div></div>
@@ -805,7 +832,7 @@ function viewManage() {
     ${sortedGroups().map(g => {
       const n = vault.supplements.filter(s => s.groupId === g.id && !s.archived).length;
       return `<div class="item-row"><div class="grow"><div class="t">${esc(g.name)}</div>
-        <div class="s">${n} supplement${n === 1 ? '' : 's'}${g.reminder ? ` · ⏰ ${esc(g.reminder)}` : ''}</div></div>
+        <div class="s">${n} supplement${n === 1 ? '' : 's'}${g.reminder ? ` · <span class="inline-ico">${ICONS.clock}</span> ${esc(g.reminder)}` : ''}</div></div>
         <button class="mini-btn" data-edit-group="${g.id}">Edit</button>
         <button class="mini-btn danger" data-del-group="${g.id}">Delete</button></div>`;
     }).join('')}
@@ -830,8 +857,8 @@ function viewManage() {
     <h2>Notifications</h2>
     <div class="sub">Get a reminder when a group's time hits (works while this page is open).</div>
     <div class="item-row"><div class="grow"><div class="t">Browser notifications</div>
-      <div class="s">${Notification.permission === 'granted' ? 'Enabled' : Notification.permission === 'denied' ? 'Blocked in browser settings' : 'Not enabled'}</div></div>
-      ${Notification.permission !== 'granted' && Notification.permission !== 'denied'
+      <div class="s">${notifStatus()}</div></div>
+      ${notifCanAsk()
         ? '<button class="mini-btn" id="notif-enable">Enable</button>' : ''}
     </div>
   </div>
@@ -841,12 +868,17 @@ function viewManage() {
 
 /* ---------------- tab wiring ---------------- */
 
+function on(id, fn) {
+  const el = document.getElementById(id);
+  if (el) el.onclick = fn;
+  return el;
+}
+
 function wireTab() {
   if (tab === 'today') {
-    $('#day-prev').onclick = () => { viewDate = shiftDate(viewDate, -1); renderTab(); };
-    $('#day-next').onclick = () => { viewDate = shiftDate(viewDate, 1); renderTab(); };
-    const bt = $('#day-today');
-    if (bt) bt.onclick = () => { viewDate = localDate(); renderTab(); };
+    on('day-prev', () => { viewDate = shiftDate(viewDate, -1); renderTab(); });
+    on('day-next', () => { viewDate = shiftDate(viewDate, 1); renderTab(); });
+    on('day-today', () => { viewDate = localDate(); renderTab(); });
     document.querySelectorAll('[data-toggle]').forEach(el => {
       el.onclick = () => commit(mToggle(el.dataset.toggle, viewDate));
     });
@@ -854,14 +886,14 @@ function wireTab() {
       el.onclick = e => { e.stopPropagation(); commit(mLogAll(el.dataset.logall, viewDate)); toast('Logged'); };
     });
   } else if (tab === 'calendar') {
-    $('#cal-prev').onclick = () => {
+    on('cal-prev', () => {
       calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; }
       renderTab();
-    };
-    $('#cal-next').onclick = () => {
+    });
+    on('cal-next', () => {
       calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; }
       renderTab();
-    };
+    });
     document.querySelectorAll('[data-day]').forEach(el => {
       el.onclick = () => {
         calSelected = calSelected === el.dataset.day ? null : el.dataset.day;
@@ -869,8 +901,8 @@ function wireTab() {
       };
     });
   } else if (tab === 'manage') {
-    $('#add-supp').onclick = () => suppModal(null);
-    $('#add-group').onclick = () => groupModal(null);
+    on('add-supp', () => suppModal(null));
+    on('add-group', () => groupModal(null));
     document.querySelectorAll('[data-edit-supp]').forEach(b => b.onclick = () => suppModal(b.dataset.editSupp));
     document.querySelectorAll('[data-del-supp]').forEach(b => b.onclick = () => {
       const s = vault.supplements.find(x => x.id === b.dataset.delSupp);
@@ -879,15 +911,15 @@ function wireTab() {
     });
     document.querySelectorAll('[data-edit-group]').forEach(b => b.onclick = () => groupModal(b.dataset.editGroup));
     document.querySelectorAll('[data-del-group]').forEach(b => b.onclick = () => deleteGroupFlow(b.dataset.delGroup));
-    const se = $('#sec-set-pw'); if (se) se.onclick = () => devicePwModal('set');
-    const ch = $('#sec-change-pw'); if (ch) ch.onclick = () => reauthModal(pw => devicePwModal('change', pw));
-    const rm = $('#sec-remove-pw'); if (rm) rm.onclick = () => reauthModal(() => {
+    const se = document.getElementById('sec-set-pw'); if (se) se.onclick = () => devicePwModal('set');
+    const ch = document.getElementById('sec-change-pw'); if (ch) ch.onclick = () => reauthModal(pw => devicePwModal('change', pw));
+    const rm = document.getElementById('sec-remove-pw'); if (rm) rm.onclick = () => reauthModal(() => {
       confirmModal('Remove device password?', 'You\'ll use your 12-word code to unlock on this browser from now on.', 'Remove', () => {
         localStorage.removeItem(SEAL_KEY); renderTab(); toast('Device password removed');
       });
     });
-    $('#sec-lock').onclick = () => lock();
-    const ne = $('#notif-enable'); if (ne) ne.onclick = async () => {
+    on('sec-lock', () => lock());
+    const ne = document.getElementById('notif-enable'); if (ne) ne.onclick = async () => {
       await Notification.requestPermission(); renderTab();
     };
   }
@@ -1043,7 +1075,7 @@ let reminderTimer = null;
 function startReminders() {
   if (reminderTimer) clearInterval(reminderTimer);
   const check = () => {
-    if (!session || Notification.permission !== 'granted') return;
+    if (!session || notifPerm() !== 'granted') return;
     const now = new Date();
     const hm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     const today = localDate();
@@ -1052,7 +1084,7 @@ function startReminders() {
         notified[g.id] = today;
         const pending = groupSupps(g.id, today).filter(s => !isTaken(s.id, today)).length;
         try {
-          new Notification(`💊 ${g.name} stack`, {
+          new Notification(`${g.name} stack`, {
             body: pending ? `${pending} supplement${pending === 1 ? '' : 's'} waiting in Stack` : 'All logged — nice work',
           });
         } catch (e) { /* ignore */ }

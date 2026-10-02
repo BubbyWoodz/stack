@@ -820,7 +820,7 @@ function viewHistory() {
       <div style="font-weight:800;font-size:17px;margin-bottom:6px">No history yet</div>
       <div class="sub">Log some supplements and your streaks will show up here.</div></div>`;
   }
-  return supps.map(s => {
+  return `<div class="hist-list">` + supps.map(s => {
     const dates = suppDates(s.id);
     const { current, longest } = streaks(dates);
     const g = vault.groups.find(g => g.id === s.groupId);
@@ -840,7 +840,7 @@ function viewHistory() {
       </div>
       <div class="tiny" style="margin-top:10px">First logged ${dates.length ? esc(dates[0]) : '— never logged —'}</div>
     </div>`;
-  }).join('');
+  }).join('') + '</div>';
 }
 
 /* ---------------- MANAGE ---------------- */
@@ -850,6 +850,7 @@ function viewManage() {
   const archived = vault.supplements.filter(s => s.archived);
   const hasSeal = !!localStorage.getItem(SEAL_KEY);
   return `
+  <div class="manage-grid">
   <div class="glass manage-sec">
     <h2>Supplements</h2>
     <div class="sub">${supps.length} active${archived.length ? ` · ${archived.length} archived (kept in history)` : ''}</div>
@@ -900,7 +901,8 @@ function viewManage() {
     </div>
   </div>
 
-  <div class="tiny" style="text-align:center;margin:18px 0 6px">Stack v1 · vault v${vault.v} · server rev ${serverVersion}<br>Keys live in memory only. Locking wipes them.</div>`;
+  <div class="tiny" style="text-align:center;margin:18px 0 6px;grid-column:1/-1">Stack v1 · vault v${vault.v} · server rev ${serverVersion}<br>Keys live in memory only. Locking wipes them.</div>
+  </div>`;
 }
 
 /* ---------------- tab wiring ---------------- */
